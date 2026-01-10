@@ -1,4 +1,4 @@
-// Copyright © 2023-2024 Apple Inc.
+// Copyright © 2023-2026 Apple Inc.
 
 #pragma once
 
@@ -7,6 +7,7 @@
 #include "mlx/array.h"
 #include "mlx/device.h"
 #include "mlx/io/load.h"
+#include "mlx/quantization_mode.h"
 #include "mlx/stream.h"
 
 #define DEFINE_VMAP()                                                 \
@@ -150,13 +151,6 @@ class UnaryPrimitive : public Primitive {
   UnaryPrimitive& operator=(const UnaryPrimitive& other) = delete;
   UnaryPrimitive& operator=(UnaryPrimitive&& other) = delete;
 };
-
-enum class QuantizationMode { Affine, Mxfp4, Mxfp8, Nvfp4 };
-
-std::string quantization_mode_to_string(QuantizationMode mode);
-QuantizationMode string_to_quantization_mode(
-    const std::string& mode,
-    std::string_view error_tag = "");
 
 class Abs : public UnaryPrimitive {
  public:

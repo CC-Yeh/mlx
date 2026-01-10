@@ -12,7 +12,6 @@ __pycache__/
 
 # Metal libraries
 *.metallib
-venv/
 
 # Distribution / packaging
 python/mlx/core
@@ -37,6 +36,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 uv.lock
+venv/
+.venv/
 
 # vim
 *.swp
