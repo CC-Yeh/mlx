@@ -197,6 +197,38 @@ class TestQuantized(mlx_tests.MLXTestCase):
                 tol = 1e-3 if dtype == mx.float32 else 1.5e-3
                 self.assertLess((y_q - y_hat).abs().max(), tol)
 
+    def test_fp_qmm(self):
+        key = mx.random.key(0)
+        k1, k2 = mx.random.split(key)
+        dtype = mx.float16
+        modes = ["nvfp4", "mxfp8"]
+        if not mx.cuda.is_available():
+            modes.append("mxfp4")
+        tests = product(
+            modes,  # mode
+            [32, 64],  # M
+            [64, 128],  # N
+            [64, 128],  # K
+        )
+        for mode, M, N, K in tests:
+            with self.subTest(shape=(M, N, K), mode=mode):
+                x = mx.random.normal(shape=(M, K), key=k1) / K**0.5
+                w = mx.random.normal(shape=(N, K), key=k2) / K**0.5
+                x = x.astype(dtype)
+                w = w.astype(dtype)
+                w_q, scales = mx.quantize(w, mode=mode)
+                w_hat = mx.dequantize(w_q, scales, mode=mode)
+                y_q = mx.quantized_matmul(
+                    x,
+                    w_q,
+                    scales,
+                    transpose=True,
+                    mode=mode,
+                )
+                y_hat = x @ w_hat.T
+                self.assertEqual(y_q.shape, y_hat.shape)
+                self.assertLess((y_q - y_hat).abs().max(), 1e-3)
+
     def test_qmm_vjp(self):
         key = mx.random.key(0)
         k1, k2 = mx.random.split(key)

@@ -71,7 +71,9 @@ else()
     mlx
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/quantized/qqmm.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/quantized/cublas_qqmm.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/quantized/qqmm_utils.cu)
+            ${CMAKE_CURRENT_SOURCE_DIR}/quantized/qqmm_utils.cu
+            ${CMAKE_CURRENT_SOURCE_DIR}/quantized/cublas_qmm.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/quantized/qmm.cpp)
 endif()
 
 if(CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.9.0)
