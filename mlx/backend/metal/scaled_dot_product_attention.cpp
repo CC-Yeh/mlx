@@ -657,7 +657,9 @@ void quant_sdpa_vector_2pass(
   kname += "_";
   kname += std::to_string(q.shape(-1));
   kname += "_";
-  kname += std::to_string(v.shape(-1));
+  // v is stored as packed uint32; the kernel is instantiated with the logical
+  // value head_dim. Recover it: logical_dim = packed_dim * 32 / bits.
+  kname += std::to_string(v.shape(-1) * 32 / bits);
 
   int N = k.shape(2);
   int gqa_factor = q.shape(1) / k.shape(1);
